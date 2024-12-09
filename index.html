@@ -116,13 +116,22 @@
     let timeoutId = null;
     let dernierMultiplicateurStable = null;
 
-    // Nouvelle fonction pour ajuster la probabilité en fonction des historiques
-    function choisirMultiplicateurAvecHistorique() {
-        const totalHistorique = historiqueMultiplicateurs.length;
-        if (totalHistorique === 0) return choisirMultiplicateur(); // Si aucun historique, utilise la probabilité par défaut
+    // Fonction pour calculer une moyenne mobile des derniers multiplicateurs
+    function calculerMoyenneMobile(historiques, periode = 5) {
+        if (historiques.length < periode) return null; // Pas assez de données
+        const dernierIndex = historiques.length - 1;
+        const somme = historiques.slice(dernierIndex - periode + 1, dernierIndex + 1)
+            .reduce((acc, val) => acc + val, 0);
+        return somme / periode;
+    }
 
-        const dernier = historiqueMultiplicateurs[totalHistorique - 1];
-        const probMultiplicateurAvecHistorique = [];
+    // Fonction améliorée de choix de multiplicateur
+    function choisirMultiplicateurAmeliore() {
+        const totalHistorique = historiqueMultiplicateurs.length;
+        const moyenneMobile = calculerMoyenneMobile(historiqueMultiplicateurs);
+        const volatilite = Math.random() * 0.5 + 0.75; // Facteur de volatilité entre 0.75x et 1.25x
+
+        const probMultiplicateur = [];
 
         for (let i = 1; i <= 30; i++) {
             let baseProb;
@@ -134,17 +143,25 @@
                 baseProb = Math.exp(-0.3 * (i - 15));
             }
 
-            // Ajustement basé sur la proximité du dernier multiplicateur
-            const ajustement = 1 / (1 + Math.abs(dernier - i)); // Plus le multiplicateur est proche, plus il est probable
-            probMultiplicateurAvecHistorique.push({ multiplicateur: i, prob: baseProb * ajustement });
+            // Ajustement basé sur la tendance (haussière ou baissière)
+            let ajustement = 1;
+            if (moyenneMobile) {
+                if (i > moyenneMobile) {
+                    ajustement = 1.5; // Favorise des multiplicateurs au-dessus de la moyenne mobile
+                } else if (i < moyenneMobile) {
+                    ajustement = 0.8; // Décourage des multiplicateurs en dessous
+                }
+            }
+
+            probMultiplicateur.push({ multiplicateur: i, prob: baseProb * ajustement });
         }
 
-        // Calculer la somme des probabilités
-        const sommeProbs = probMultiplicateurAvecHistorique.reduce((acc, item) => acc + item.prob, 0);
-        const seuil = Math.random() * sommeProbs;
+        // Calcul de la somme des probabilités
+        const sommeProbs = probMultiplicateur.reduce((acc, item) => acc + item.prob, 0);
+        const seuil = Math.random() * sommeProbs * volatilite; // Inclut le facteur de volatilité
         let accum = 0;
 
-        for (let item of probMultiplicateurAvecHistorique) {
+        for (let item of probMultiplicateur) {
             accum += item.prob;
             if (accum >= seuil) {
                 return item.multiplicateur;
@@ -154,20 +171,28 @@
         return 1; // Valeur par défaut au cas où
     }
 
-    // Modification pour intégrer la nouvelle logique dans les prédictions
-    function obtenirPrediction() {
-        if (dernierMultiplicateurStable) {
-            // Utiliser la nouvelle probabilité
-            return choisirMultiplicateurAvecHistorique();
-        }
-        return choisirMultiplicateur(); // Sinon, utiliser la probabilité par défaut
+    // Fonction principale pour obtenir une prédiction
+    function obtenirPredictionAmelioree() {
+        const tendance = historiqueMultiplicateurs.length > 2
+            ? historiqueMultiplicateurs[historiqueMultiplicateurs.length - 1] -
+              historiqueMultiplicateurs[historiqueMultiplicateurs.length - 2]
+            : 0;
+
+        const predictionBase = choisirMultiplicateurAmeliore();
+
+        // Ajustement final basé sur la tendance récente
+        const predictionFinale = tendance > 0
+            ? predictionBase * (1 + Math.random() * 0.1) // Légère augmentation si tendance haussière
+            : predictionBase * (1 - Math.random() * 0.1); // Légère diminution si tendance baissière
+
+        return Math.max(1, predictionFinale); // Assure un minimum de 1x
     }
 
-    btnPrediction.addEventListener('click', () => {
-        const prediction = obtenirPrediction();
-        predictionResultDiv.textContent = `Prédiction : ${prediction.toFixed(2)}x`;
-    });
-
+    // Mise à jour de l'événement bouton pour intégrer la nouvelle prédiction
+btnPrediction.addEventListener('click', () => {
+    const prediction = obtenirPredictionAmelioree(); // Fonction correcte
+    predictionResultDiv.textContent = `Prédiction améliorée : ${prediction.toFixed(2)}x`;
+});
 
     function mettreAJourMultiplicateurActuel(multiplicateur) {
         if (timeoutId) clearTimeout(timeoutId);
@@ -181,7 +206,7 @@
     }
 
         btnPrediction.addEventListener('click', () => {
-            const prediction = obtenirPrediction();
+            const prediction = obtenirPredictionAmelioree();
             predictionResultDiv.textContent = `Prédiction : ${prediction.toFixed(2)}x`;
         });
 
