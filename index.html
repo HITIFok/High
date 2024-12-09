@@ -105,44 +105,71 @@
         </select>
     </div>
 
-    <script>
-        const multiplicateurActuelDiv = document.querySelector('.multiplicateur-actuel');
-        const historiqueSelect = document.getElementById('historique-list');
-        const predictionResultDiv = document.getElementById('prediction-result');
-        const btnPrediction = document.getElementById('btnPrediction');
-        const historiqueMultiplicateurs = [];
-        let dernierMultiplicateur = null;
-        let websocket = null;
-        let timeoutId = null;
-        let dernierMultiplicateurStable = null;
+<script>
+    const multiplicateurActuelDiv = document.querySelector('.multiplicateur-actuel');
+    const historiqueSelect = document.getElementById('historique-list');
+    const predictionResultDiv = document.getElementById('prediction-result');
+    const btnPrediction = document.getElementById('btnPrediction');
+    const historiqueMultiplicateurs = [];
+    let dernierMultiplicateur = null;
+    let websocket = null;
+    let timeoutId = null;
+    let dernierMultiplicateurStable = null;
 
-        // Probabilités prédéfinies des multiplicateurs
-        const probabilites = [
-            { multiplicateur: 1.2, prob: 0.9 },
-            { multiplicateur: 1.5, prob: 0.8 },
-            { multiplicateur: 2.0, prob: 0.5 },
-            { multiplicateur: 2.7, prob: 0.4 },
-            { multiplicateur: 100, prob: 0.00278 }, // Rare
-            { multiplicateur: 200, prob: 0.00139 }  // Très rare
-        ];
-
-        function obtenirPrediction() {
-            // Générer une prédiction basée sur les probabilités
-            let prediction = 0;
-
-            probabilites.forEach(({ multiplicateur, prob }) => {
-                if (Math.random() <= prob) {
-                    prediction = multiplicateur;
-                }
-            });
-
-            // Si aucune probabilité n'a été validée, retourne la valeur la plus basse
-            if (prediction === 0) {
-                prediction = probabilites[0].multiplicateur;
+    // Fonction pour choisir un multiplicateur avec probabilité.
+    function choisirMultiplicateur() {
+        let probMultiplicateur1_30 = [];
+        for (let i = 1; i <= 30; i++) {
+            if (i <= 5) {
+                probMultiplicateur1_30.push({ multiplicateur: i, prob: Math.exp(-0.2 * i) });
+            } else if (i <= 15) {
+                probMultiplicateur1_30.push({ multiplicateur: i, prob: Math.exp(-0.1 * i) });
+            } else {
+                probMultiplicateur1_30.push({ multiplicateur: i, prob: Math.exp(-0.3 * (i - 15)) });
             }
-
-            return prediction;
         }
+
+        let sommeProb1_30 = probMultiplicateur1_30.reduce((acc, item) => acc + item.prob, 0);
+        let seuil = Math.random() * sommeProb1_30;
+        let accum = 0;
+
+        let valeurChoisie = 0;
+        for (let item of probMultiplicateur1_30) {
+            accum += item.prob;
+            if (accum >= seuil) {
+                valeurChoisie = item.multiplicateur;
+                break;
+            }
+        }
+
+        return valeurChoisie;
+    }
+
+    // Définir la logique de prédiction
+    function obtenirPrediction() {
+        // Ici, utilise la logique pour prédire avec probabilités ou un simple échantillon aléatoire
+        if (dernierMultiplicateurStable) {
+            return dernierMultiplicateurStable * (Math.random() * 0.5 + 1);
+        }
+        return choisirMultiplicateur(); // Appel simple de probabilité si rien de stable.
+    }
+
+    btnPrediction.addEventListener('click', () => {
+        const prediction = obtenirPrediction();
+        predictionResultDiv.textContent = `Prédiction : ${prediction.toFixed(2)}x`;
+    });
+
+
+    function mettreAJourMultiplicateurActuel(multiplicateur) {
+        if (timeoutId) clearTimeout(timeoutId);
+
+        dernierMultiplicateur = multiplicateur;
+        multiplicateurActuelDiv.textContent = `EN COURS : ${multiplicateur.toFixed(2)}x`;
+
+        timeoutId = setTimeout(() => {
+            dernierMultiplicateurStable = multiplicateur;
+        }, 500);
+    }
 
         btnPrediction.addEventListener('click', () => {
             const prediction = obtenirPrediction();
