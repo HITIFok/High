@@ -290,7 +290,7 @@ btnPrediction.addEventListener('click', () => {
                     dernierMultiplicateurStable = multiplicateur;
                     ajouterHistorique(multiplicateur);
                 }
-            }, 500); // Ajouter l'historique après 0.5 seconde d'absence de changement
+            }, 1000); // Ajouter l'historique après 1 seconde d'absence de changement
         }
 
         connecterWebSocket();
