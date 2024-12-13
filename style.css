@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'Algerian';
+    src: url('./fonts/Algerian.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Bernard MT Condensed';
+    src: url('./fonts/BernardMTCondensed.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
