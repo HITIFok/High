@@ -1,13 +1,122 @@
-@font-face {
-    font-family: 'Algerian';
-    src: url('./fonts/Algerian.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
+body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle, #FFD700, #800080, #FF4500);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* En-tête */
+        h1 {
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            background: linear-gradient(to right, #FFD700, #FF8C00, #FF4500);
+            color: white;
+            font-family: 'Algerian', sans-serif;
+            font-weight: bold;
+            border-bottom: 5px solid #800080;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Section multiplicateur actuel */
+        .multiplicateur-actuel {
+            font-size: 24px;
+            margin: 20px;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-weight: bold;
+            font-family: 'Bernard MT Condensed', sans-serif;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Section historique */
+        .historique {
+            margin: 20px;
+            background: linear-gradient(to bottom, #FFD700, #FF8C00, #800080);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .historique h2 {
+            font-size: 20px;
+            color: transparent;
+            text-shadow: 1px 1px 2px #333;
+            font-family: 'Algerian', sans-serif;
+            font-weight: bold;
+            background: linear-gradient(to right, #FF0000, #800080);
+            -webkit-background-clip: text;
+            -moz-background-clip: text;
+            background-clip: text;
+        }
+
+        /* Historique personnalisé (remplacement de select) */
+.historique-list {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    font-family: 'Bernard MT Condensed', sans-serif; /* Ajout de la police */
 }
 
-@font-face {
-    font-family: 'Bernard MT Condensed';
-    src: url('./fonts/BernardMTCondensed.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
+.historique-item {
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    font-weight: bold;
+    color: white;
+    font-family: 'Bernard MT Condensed', sans-serif; /* Ajout de la police */
 }
+
+.historique-item:hover {
+    opacity: 0.8;
+}
+
+        .btn {
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    background: linear-gradient(to right, #FF0000, #B22222); /* Dégradé de fond */
+    color: white;
+    border: none;
+    border-radius: 10px; /* Bordure arrondie */
+    font-family: 'Algerian', sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    
+    /* Bordure dégradée */
+    border: 3px solid transparent;
+    background-image: linear-gradient(to right, #FF4500, #FF6347);
+    background-clip: padding-box; /* Assure que la bordure dégradée s'applique uniquement sur l'extérieur */
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+        .prediction-result {
+            margin-top: 10px;
+            font-size: 20px;
+            font-family: 'Bernard MT Condensed', sans-serif;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 1px 1px 2px #333;
+        }
+       .predictions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Pour centrer horizontalement */
+    margin-top: 20px;
+            }
