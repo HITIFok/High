@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multiplicateur HIGH FLYER</title>
-    <link href="style.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    </style>
-       /* Arrière-plan principal */
+    <script src="https://cdn.jsdelivr.net/npm/regression"></script> <!-- Ajout de regression-js -->
+    <style>
+        /* Arrière-plan principal */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: radial-gradient(circle, #FFD700, #800080, #FF4500);
-            color: #333;
+            background: radial-gradient(circle, #2c3e50, #34495e, #1abc9c);
+            color: #fff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -21,17 +21,23 @@
         }
 
         /* En-tête */
-        h1 {
-            text-align: center;
-            padding: 20px;
-            margin: 0;
-            background: linear-gradient(to right, #FFD700, #FF8C00, #FF4500);
-            color: white;
-            font-family: 'Algerian', sans-serif;
-            font-weight: bold;
-            border-bottom: 5px solid #800080;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        }
+h1 {
+    text-align: center;
+    padding: 20px;
+    margin: 0;
+    background: linear-gradient(to right, #ff4b5c, #ff5c8d); /* Dégradé dynamique */
+    color: white;
+    font-family: 'Algerian', sans-serif;
+    font-weight: bold;
+    border-bottom: none; /* Suppression du trait violet */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: background 0.5s ease; /* Transition douce pour l'effet dynamique */
+}
+
+h1:hover {
+    background: linear-gradient(to right, #00c6ff, #0072ff); /* Changement de couleur lors du survol */
+}
+
 
         /* Section multiplicateur actuel */
         .multiplicateur-actuel {
@@ -50,7 +56,7 @@
         /* Section historique */
         .historique {
             margin: 20px;
-            background: linear-gradient(to bottom, #FFD700, #FF8C00, #800080);
+            background: linear-gradient(to bottom, #ff4b5c, #ff5c8d);
             padding: 20px;
             border-radius: 15px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
@@ -70,21 +76,29 @@
             background-clip: text;
         }
 
-        /* Historique personnalisé (remplacement de select) */
-.historique-list {
-    display: flex;
-    flex-direction: column;
-    margin-top: 10px;
-    font-family: 'Bernard MT Condensed', sans-serif; /* Ajout de la police */
-}
-
+        /* Historique personnalisé */
 .historique-item {
     padding: 10px;
     margin: 5px 0;
     border-radius: 5px;
     font-weight: bold;
     color: white;
-    font-family: 'Bernard MT Condensed', sans-serif; /* Ajout de la police */
+    font-family: 'Bernard MT Condensed', sans-serif;
+    display: flex;
+    flex-direction: column; /* Organise le contenu en colonnes */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.historique-item .heure {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.historique-item .multiplicateur {
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .historique-item:hover {
@@ -92,28 +106,26 @@
 }
 
         .btn {
-    padding: 10px 20px;
-    font-size: 18px;
-    cursor: pointer;
-    background: linear-gradient(to right, #FF0000, #B22222); /* Dégradé de fond */
-    color: white;
-    border: none;
-    border-radius: 10px; /* Bordure arrondie */
-    font-family: 'Algerian', sans-serif;
-    font-weight: bold;
-    text-transform: uppercase;
-    transition: all 0.3s ease;
-    
-    /* Bordure dégradée */
-    border: 3px solid transparent;
-    background-image: linear-gradient(to right, #FF4500, #FF6347);
-    background-clip: padding-box; /* Assure que la bordure dégradée s'applique uniquement sur l'extérieur */
-}
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            background: linear-gradient(to right, #ff6f61, #ff3d3d); 
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Algerian', sans-serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            background-image: linear-gradient(to right, #ff4500, #ff6347);
+            background-clip: padding-box;
+        }
 
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-}
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
 
         .prediction-result {
             margin-top: 10px;
@@ -123,15 +135,15 @@
             color: #FFD700;
             text-shadow: 1px 1px 2px #333;
         }
-       .predictions {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; /* Pour centrer horizontalement */
-    margin-top: 20px;
-      }
 
-</style>
+        .predictions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <h1>Multiplicateur en temps réel</h1>
@@ -165,7 +177,6 @@
 
         // Fonction de gestion de couleur (avec dégradés)
         function getGradientForMultiplicateur(multiplicateur) {
-            console.log(`Multiplicateur reçu : ${multiplicateur}`); // Debugging
             if (multiplicateur >= 0.01 && multiplicateur <= 1.99) {
                 return 'linear-gradient(to right, #ADD8E6, #87CEEB)'; // Bleu clair
             }
@@ -186,14 +197,13 @@
 
         // Mise à jour du multiplicateur actuel
         function mettreAJourMultiplicateurActuel(multiplicateur) {
-            console.log("Mise à jour du multiplicateur : " + multiplicateur); // Debugging
             if (timeoutId) clearTimeout(timeoutId);
 
             dernierMultiplicateur = multiplicateur;
             multiplicateurActuelDiv.textContent = `EN COURS : ${multiplicateur.toFixed(2)}x`;
 
             const color = getGradientForMultiplicateur(multiplicateur);
-            multiplicateurActuelDiv.style.background = color; // Assurez-vous que nous appliquons le background correctement
+            multiplicateurActuelDiv.style.background = color;
 
             timeoutId = setTimeout(() => {
                 if (multiplicateur === dernierMultiplicateur) {
@@ -203,46 +213,95 @@
             }, 1500); // Ajouter l'historique après 1,5 seconde d'absence de changement
         }
 
+        // Ajouter un multiplicateur dans l'historique avec l'heure
+function ajouterHistorique(multiplicateur) {
+    const maintenant = new Date();
+    const heures = String(maintenant.getHours()).padStart(2, '0');  // Ajout du zéro pour les heures
+    const minutes = String(maintenant.getMinutes()).padStart(2, '0');  // Ajout du zéro pour les minutes
+    const secondes = String(maintenant.getSeconds()).padStart(2, '0');  // Ajout du zéro pour les secondes
+    const heureFormatee = `${heures}:${minutes}:${secondes}`;
 
-    // Fonction pour ajouter l'historique avec bordure dorée et arrondie
-    function ajouterHistorique(multiplicateur) {
-        // Ajout du multiplicateur dans l'historique interne
-        historiqueMultiplicateurs.unshift(multiplicateur); // Ajoute le multiplicateur au début du tableau
-
-        // Mise à jour de l'option d'affichage d'historique en cours
-        const historiqueOption = historiqueListDiv.querySelector('.ENCOURS'); // Utilisation du nouveau nom ici
-        if (historiqueOption) {
-            historiqueOption.textContent = `HISTORIQUES : ${multiplicateur}x`;
-        }
-
-        // Création d'un nouvel élément <option> pour l'historique
-        const option = document.createElement('option');
-        option.className = 'multiplicateur';
-        option.value = multiplicateur;
-        option.textContent = `${multiplicateur}x`;
-
-        // Appliquer la couleur de fond correcte à l'option de l'historique
-        const color = getGradientForMultiplicateur(multiplicateur);
-        option.style.background = color;  // Appliquer le dégradé comme fond
-        option.style.fontWeight = 'bold'; // Mettre le texte en gras pour plus de lisibilité
-
-        // Bordure dorée et arrondie
-        option.style.border = "2px solid gold";  // Bordure dorée
-        option.style.borderRadius = "10px";      // Bordure arrondie
-        option.style.marginBottom = "5px";       // Espacement entre les lignes
-
-        // Ajouter la nouvelle option au début de la liste (avec prepend)
-        historiqueListDiv.prepend(option); // Utilisation du nouveau nom ici
-
-        // Mise à jour du nombre de vols dans l'historique
-        document.getElementById("historique-header").textContent = `Historique des Vols : ${historiqueMultiplicateurs.length}`;
+    historiqueMultiplicateurs.unshift(multiplicateur);
+    if (historiqueMultiplicateurs.length > 30) {
+        historiqueMultiplicateurs.pop();
     }
 
-        // Prédiction
-        btnPrediction.addEventListener('click', () => {
-            const prediction = Math.random() * 30 + 1; // Exemple simplifié
-            predictionResultDiv.textContent = `Prédiction : ${prediction.toFixed(2)}x`;
-        });
+    const color = getGradientForMultiplicateur(multiplicateur);
+    const item = document.createElement('div');
+    item.className = 'historique-item';
+    
+    // Structure de l'élément avec deux parties : heure et multiplicateur
+    const heureElement = document.createElement('div');
+    heureElement.className = 'heure';
+    heureElement.textContent = heureFormatee;
+
+    const multiplicateurElement = document.createElement('div');
+    multiplicateurElement.className = 'multiplicateur';
+    multiplicateurElement.textContent = `${multiplicateur.toFixed(2)}x`;
+
+    item.appendChild(heureElement);
+    item.appendChild(multiplicateurElement);
+    item.style.background = color;
+    historiqueListDiv.prepend(item);
+
+    document.getElementById("historique-header").textContent = `Historique des Vols : ${historiqueMultiplicateurs.length}`;
+}
+
+// Fonction de prédiction améliorée
+function predireMultiplicateur() {
+    if (historiqueMultiplicateurs.length < 2) {
+        predictionResultDiv.textContent = 'Pas assez de données pour la prédiction.';
+        return;
+    }
+
+    // Récupération des deux derniers éléments de l'historique
+    const dernierIndex = historiqueMultiplicateurs.length - 1;
+    const dernierMultiplicateur = historiqueMultiplicateurs[dernierIndex];
+    const avantDernierMultiplicateur = historiqueMultiplicateurs[dernierIndex - 1];
+
+    const dernierHeureElement = historiqueListDiv.children[0].querySelector('.heure').textContent;
+    const avantDernierHeureElement = historiqueListDiv.children[1].querySelector('.heure').textContent;
+
+    // Conversion des heures en millisecondes
+    const dernierHeure = new Date(`1970-01-01T${dernierHeureElement}Z`).getTime();
+    const avantDernierHeure = new Date(`1970-01-01T${avantDernierHeureElement}Z`).getTime();
+
+    // Calcul du temps écoulé entre les deux derniers points
+    const ecartTempsMs = dernierHeure - avantDernierHeure;
+    const ecartTempsSecondes = Math.floor(ecartTempsMs / 1000);
+
+    // Calcul d'un multiplicateur prédictif en fonction de l'écart de temps
+    const tauxVariation = dernierMultiplicateur / avantDernierMultiplicateur;
+    let multiplicateurPredictif = dernierMultiplicateur * tauxVariation;
+
+    // Appliquer -2 au multiplicateur prédit seulement s'il est supérieur à 2.00
+    if (multiplicateurPredictif > 2.00) {
+        multiplicateurPredictif -= 2;
+    }
+
+    // S'assurer que le multiplicateur prédit ne descend jamais en dessous de 1
+    if (multiplicateurPredictif < 1) {
+        multiplicateurPredictif = 1;
+    }
+
+    // Formatage de l'heure prédite (ajout de 1 minute au dernier historique)
+    const nouvelleHeureMs = dernierHeure + 1 * 60000; // Ajout de 1 minute (60000 ms)
+    const nouvelleHeure = new Date(nouvelleHeureMs);
+
+    let heures = String(nouvelleHeure.getUTCHours()).padStart(2, '0');  // Ajout du zéro pour les heures
+    let minutes = String(nouvelleHeure.getUTCMinutes()).padStart(2, '0');  // Ajout du zéro pour les minutes
+    let secondes = String(nouvelleHeure.getUTCSeconds()).padStart(2, '0');  // Ajout du zéro pour les secondes
+    
+    // Format final de l'heure
+    const heurePredite = `${heures}:${minutes}:${secondes}`;
+
+    // Affichage des résultats
+    predictionResultDiv.innerHTML = `
+        Temps écoulé : ${ecartTempsSecondes} secondes<br>
+        Multiplicateur prédit : ${multiplicateurPredictif.toFixed(2)}x<br>
+        Heure prédite : ${heurePredite}
+    `;
+}
 
         // Connexion WebSocket
         function connecterWebSocket() {
@@ -274,6 +333,8 @@
                 console.error("Erreur WebSocket :", error);
             };
         }
+
+        btnPrediction.addEventListener('click', predireMultiplicateur);
 
         connecterWebSocket();
     </script>
